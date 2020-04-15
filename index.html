@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movable iframe example</title>
+    <script type="module">
+        import IframeAnchor from "./iframe_anchor.mjs"
+        customElements.define("iframe-anchor", IframeAnchor);
+        window.onload = () => {
+            const a = document.getElementById("a");
+            var x = 0;
+            setInterval(() => {
+                const width = 300 - Math.abs(Math.sin(x)) * 200;
+                x+=0.02;
+                a.style.width = width + "px";
+            }, 5);
+            var position = 0;
+            setInterval(() => {
+                a.remove();
+                if (position < 3)
+                    document.getElementById(position.toString()).append(a);
+                position = (position + 1) % 4;
+            }, 1635);
+            setInterval(() => {
+                a.style.display = "none";
+                setTimeout(() => a.style.display = null, 500);
+            }, 2000);
+        };
+    </script>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0px;
+        }
+        iframe-anchor {
+            position: relative;
+            display: block;
+            width: 200px;
+            height: 30vh;
+            border: 1px solid blue;
+        }
+        iframe {
+            border: 1px solid red;
+        }
+        .a {
+            border: 1px solid green;
+            width: 300px;
+            height: 30vh;
+        }
+    </style>
+</head>
+<body>
+    Observe how the timer never resets, even though the anchor is both resized
+    and moved within the DOM. Furthermore, as the log shows, rendering is only
+    done when the anchor is visible. 
+    <div class="a", id="0">
+        <iframe-anchor id="a"></iframe-anchor>
+    </div>
+    <div class="a", id="1"></div>
+    <div class="a", id="2"></div>
+    <script>
+        window.onload = () => {
+            const anc = document.getElementById("a");
+            console.log(anc)
+            anc.iframe.src = "./counter.html";
+        }
+    </script>
+</body>
+</html>
